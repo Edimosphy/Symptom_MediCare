@@ -14,6 +14,15 @@ This health-simulated demo project aims to tackle critical health challenges in 
 2. A key feature you'll see in our demo is that after symptoms are entered, we plot a chart to visually show the probability distribution of the likely diseases. This would helps healthcare workers see not just one possible diagnosis, but the relative chances of different illnesses, aiding their decision-making.
 ##### For this demo, we're focusing on Nigeria's most common diseases: Malaria, Typhoid, and HIV/AIDS with ten(10) physical symptoms
 
+## Result
+![image](https://github.com/user-attachments/assets/ba7d80be-b1d3-44dc-baa8-3012947cc065)
+
+## APP Deployment
+This health simulated demo app will be depolyed on Streamlit
+
+
 ## Future plan and Innovation:
 We look forward to using advanced Machine Learning to build an even more robust AI model. We also aim to introduce databases where vital user information like age, gender, and location can be securely stored. This data will be valuable for medical research and crucial for tracking disease outbreaks across Nigeria and the World at large
+
+
 
