@@ -100,8 +100,15 @@ def predict_disease(df, user_symptoms):
         return predicted, disease_probs
 
 # Plot the probabilities for visual display of the disease
-def plot_advanced_distribution(probabilities):
-    sns.set(style="whitegrid")
+def plot_advanced_distribution(probabilities, plotting_style):
+    # Apply selected plotting style
+    if plotting_style == "Seaborn Darkgrid":
+        sns.set(style="darkgrid")
+    elif plotting_style == "Matplotlib Classic":
+        plt.style.use('classic')
+    else:
+        sns.set(style="whitegrid") # Default style
+
     diseases = list(probabilities.keys())
     values = list(probabilities.values())
     colors = sns.color_palette("coolwarm", len(diseases))
@@ -119,31 +126,48 @@ def plot_advanced_distribution(probabilities):
         ax.text(bar.get_x() + bar.get_width()/2., height + 2,
                 f'{height:.1f}%', ha='center', fontsize=11, fontweight='semibold')
 
+    # Reset style after plotting to avoid affecting other potential plots
+    if plotting_style != "Default":
+        plt.style.use('default')
+
     return fig # Return the figure object
 
 
-# %% [markdown]
 # Streamlit App Layout
 st.title("Symptom Medicare Disease Predictor")
-st.write("Please select the symptoms you are experiencing.")
+st.write("Please provide your information and select the symptoms you are experiencing.")
+
+# Add a text input for the user's name
+user_name = st.text_input("Enter your Name")
+
+# Add the "Manage Selectbox" for plotting style
+plotting_style_options = ["Default", "Seaborn Darkgrid", "Matplotlib Classic"]
+selected_plotting_style = st.selectbox("Select Plotting Style", plotting_style_options)
+
 
 user_symptoms = {}
 # Create select boxes for each symptom
 for symptom, options in symptom_option_mapping.items():
     # Get the list of values for the selectbox
     option_values = list(options.values())
-    selected_value = st.selectbox(f"Select {symptom}", option_values)
+    # Use a unique key for each selectbox in the loop [1]
+    selected_value = st.selectbox(f"Select {symptom}", option_values, key=f"symptom_{symptom}")
     # Store the selected value in the user_symptoms dictionary
     user_symptoms[symptom] = selected_value
 
 if st.button("Predict Disease"):
     prediction, probs = predict_disease(df, user_symptoms)
 
+    # Display a personalized message if a name was entered
+    if user_name:
+        st.write(f"Hello, {user_name}!")
+
     if prediction == "No Match Found":
         st.write("No potential disease matches found for the given symptoms in the training data.")
     else:
         st.write(f"\nBased on your symptoms, the most likely disease is: **{prediction}**")
         if probs:
-            fig = plot_advanced_distribution(probs)
+            # Pass the selected plotting style to the plotting function
+            fig = plot_advanced_distribution(probs, selected_plotting_style)
             st.pyplot(fig)
-
+        
